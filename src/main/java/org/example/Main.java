@@ -6,11 +6,8 @@ import org.example.net.NetWorkHandler;
 import org.example.twitch.TwitchDownloader;
 import org.example.twitch.VodData;
 
-import java.io.File;
 import java.io.IOException;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) throws IOException {
         FileManager.initialize();
@@ -28,13 +25,23 @@ public class Main {
         for(String worldId: FileManager.undownloadedList){
             NetWorkHandler.fetchVodData(worldId);
             if(!NetDataParse.parseVodData()){
-                NetWorkHandler.changeAndPrintCurrentStatus("error: fail to parse vod data");
-                return;
+                NetWorkHandler.changeAndPrintCurrentStatus("error: fail to parse vod data for " + worldId);
+                // 改为 continue：如果当前世界没有 VOD，跳过它继续处理下一个，而不是直接退出程序
+                continue;
             }
             FileManager.prepareTheDownloading(worldId);
-            TwitchDownloader.download(VodData.vodId,VodData.offset);
-            TwitchDownloader.writeMetaDataToDescription();
-            FileManager.setDownloaded(worldId);
+
+            // 获取下载器返回的状态
+            boolean isSuccess = TwitchDownloader.download(worldId, VodData.vodId, VodData.offset,VodData.twitchName,VodData.finishIGT, VodData.finishRTA);
+
+            // 只有完整下载成功，才写入简介并标记为已下载
+            if(isSuccess){
+                TwitchDownloader.writeMetaDataToDescription(worldId);
+                FileManager.setDownloaded(worldId);
+                System.out.println(worldId + " 处理完毕，已标记为下载。");
+            } else {
+                NetWorkHandler.changeAndPrintCurrentStatus("warning: download failed or interrupted for " + worldId);
+            }
         }
     }
 }
