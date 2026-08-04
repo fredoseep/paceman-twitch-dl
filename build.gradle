@@ -19,3 +19,15 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+jar {
+    manifest {
+        // 指定程序的主类入口
+        attributes 'Main-Class': 'org.example.Main'
+    }
+
+    // 将运行时依赖（如 Gson）打包进 JAR 中
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

@@ -21,7 +21,7 @@ public class TwitchDownloader {
         long minutes = finishIGTSeconds / 60;
         long seconds = finishIGTSeconds % 60;
         String videoUrl = "https://www.twitch.tv/videos/" + vodId;
-        String outputPath = Paths.get("paceman-twitch-dl", worldId, twitchId+" "+minutes+":"+seconds+".mp4").toString();
+        String outputPath = Paths.get("paceman-twitch-dl", worldId, twitchId+" "+minutes+"_"+seconds+".mp4").toString();
 
         System.out.println("开始下载 VOD: " + vodId + ", 截取时间段: " + startSeconds + "s - " + endSeconds + "s");
         String proxyUrl = "http://127.0.0.1:7897";
