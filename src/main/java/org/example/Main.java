@@ -22,6 +22,10 @@ public class Main {
     }
 
     private static void download() throws IOException {
+        if(FileManager.undownloadedList.isEmpty()){
+            NetWorkHandler.changeAndPrintCurrentStatus("nothing to download,exit...");
+            return;
+        }
         for(String worldId: FileManager.undownloadedList){
             NetWorkHandler.fetchVodData(worldId);
             if(!NetDataParse.parseVodData()){
