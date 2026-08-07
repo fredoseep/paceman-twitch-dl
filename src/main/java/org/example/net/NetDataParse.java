@@ -99,6 +99,9 @@ public class NetDataParse {
                 return false;
             }
             if (dataObject.has("vodId")) {
+                if(dataObject.get("vodId").isJsonNull()){
+                    return true;
+                }
                 VodData.vodId = dataObject.get("vodId").getAsLong();
             } else {
                 NetWorkHandler.changeAndPrintCurrentStatus("error: vodId key lost");

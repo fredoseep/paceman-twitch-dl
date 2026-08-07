@@ -33,6 +33,11 @@ public class Main {
                 // 改为 continue：如果当前世界没有 VOD，跳过它继续处理下一个，而不是直接退出程序
                 continue;
             }
+            if(VodData.vodId==-1){
+                NetWorkHandler.changeAndPrintCurrentStatus("run has no vod, trying next...");
+                FileManager.setDownloaded(worldId);
+                continue;
+            }
             FileManager.prepareTheDownloading(worldId);
 
             // 获取下载器返回的状态
